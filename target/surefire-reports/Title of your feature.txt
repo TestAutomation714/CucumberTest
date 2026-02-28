@@ -1,0 +1,9 @@
+-------------------------------------------------------------------------------
+Test set: Title of your feature
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.305 s <<< FAILURE! - in Title of your feature
+Title of your feature.Title of your scenario new outline  Time elapsed: 0.305 s  <<< ERROR!
+java.lang.NullPointerException
+	at com.StepDef.NewCucumSteps.user_is_on_login_page(NewCucumSteps.java:15)
+	at ✽.User is on login page(file:///C:/Users/PC/Automation_workspace/BDDTest/src/test/resources/features/newCucumFeat.feature:47)
+

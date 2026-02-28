@@ -1,0 +1,1 @@
+java -Dwebdriver.chrome.driver="C:\Users\PC\Automation_workspace\BDDTest\drivers\chromedriver.exe" -jar C:\Users\PC\Automation_workspace\BDDTest\drivers\selenium-server-standalone-3.141.59.jar -role node -hub http://192.168.29.130:4444/grid/register/

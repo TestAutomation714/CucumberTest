@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Cucumber" time="0.521" tests="1" skipped="0" failures="1" errors="0">
+<testcase classname="Title of your feature" name="Title of your scenario new outline" time="0.029">
+<failure type="java.lang.NullPointerException">
+<![CDATA[java.lang.NullPointerException
+	at com.StepDef.NewCucumSteps.user_is_on_login_page(NewCucumSteps.java:15)
+	at ?.User is on login page(file:///C:/Users/PC/Automation_workspace/BDDTest/src/test/resources/features/newCucumFeat.feature:47)
+]]>
+</failure>
+<system-out><![CDATA[
+Given User is on login page.................................................failed
+]]></system-out>
+</testcase>
+</testsuite>

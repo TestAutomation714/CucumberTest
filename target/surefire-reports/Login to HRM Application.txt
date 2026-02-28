@@ -1,0 +1,9 @@
+-------------------------------------------------------------------------------
+Test set: Login to HRM Application
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 21.832 s <<< FAILURE! - in Login to HRM Application
+Login to HRM Application.Login with valid credentials - Feature 1, Scenario - 1  Time elapsed: 21.832 s  <<< ERROR!
+java.lang.NullPointerException
+	at com.StepDef.LoginPageDefinitions.loginTest(LoginPageDefinitions.java:27)
+	at ✽.User is on Home page(file:///C:/Users/PC/Automation_workspace/BDDTest/src/test/resources/features/LoginPage.feature:5)
+
