@@ -37,9 +37,14 @@ public class DriverManager {
 		            throw new RuntimeException("Grid Hub URL is invalid", e);
 		        }
 		    } else {
+		       ChromeOptions options = new ChromeOptions();
+		    			options.addArguments("--headless=new");
+		    			options.addArguments("--no-sandbox"); 
+		    			options.addArguments("--disable-dev-shm-usage");
+		    			//options.addArguments("--window-size=1920,1080");
 		        // Your existing local setup
 		        WebDriverManager.chromedriver().setup();
-		        driver = new ChromeDriver();
+		        driver = new ChromeDriver(options);
 		    }
 		    
 		    driver.manage().window().maximize();
