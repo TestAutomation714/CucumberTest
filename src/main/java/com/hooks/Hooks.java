@@ -1,18 +1,16 @@
 package com.hooks;
 
 import io.cucumber.java.Before;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import java.io.IOException;
 import io.cucumber.java.After;
-
 import com.NewCucum.DriverManager;
 
 public class Hooks {
 
 	 @Before
-	    public void setUp() {
+	    public void setUp() throws IOException, InterruptedException {
 	        // Initialize the thread-local driver before each scenario
-	        DriverManager.setDriver("chrome","");
+	        DriverManager.setDriver();
 	    }
 
 	    @After

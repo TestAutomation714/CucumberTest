@@ -1,14 +1,19 @@
 package com.NewCucum;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Duration;
+import java.util.Properties;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
+import com.Utility.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DriverManager {
@@ -16,8 +21,11 @@ public class DriverManager {
 	 private static final ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
 	 
 	 
-	 public static void setDriver(String browser, String executionType) {
+	 public static void setDriver() throws IOException, InterruptedException {
 		    WebDriver driver;
+			String browserType = PropertiesFile.readProperties("browsertype").toString();
+			String executionType = PropertiesFile.readProperties("executionType").toString();
+			String urlApplication = PropertiesFile.readProperties("urlApplication").toString();
 		    if (executionType.equalsIgnoreCase("remote")) {
 		        try {
 		        	
@@ -25,7 +33,7 @@ public class DriverManager {
 		            // URL of your Selenium Grid Hub
 		            URL hubUrl = new URL(huburl); 
 		          
-		            if (browser.equalsIgnoreCase("chrome")) {
+		            if (browserType.equalsIgnoreCase("chrome")) {
 		                ChromeOptions options = new ChromeOptions();
 		                options.addArguments("--remote-allow-origins=*");
 		                driver = new RemoteWebDriver(hubUrl, options);
@@ -38,9 +46,9 @@ public class DriverManager {
 		        }
 		    } else {
 		       ChromeOptions options = new ChromeOptions();
-		    			options.addArguments("--headless=new");
+		    			/*options.addArguments("--headless=new");
 		    			options.addArguments("--no-sandbox"); 
-		    			options.addArguments("--disable-dev-shm-usage");
+		    			options.addArguments("--disable-dev-shm-usage");*/
 		    			//options.addArguments("--window-size=1920,1080");
 		        // Your existing local setup
 		        WebDriverManager.chromedriver().setup();
@@ -48,7 +56,10 @@ public class DriverManager {
 		    }
 		    
 		    driver.manage().window().maximize();
+		    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 		    tlDriver.set(driver);
+		    Thread.sleep(3000);
+	    	DriverManager.getDriver().get(urlApplication);
 		}
 
 	    /*public static void setDriver1(String browser) {

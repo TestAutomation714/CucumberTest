@@ -10,11 +10,19 @@ Feature: Title of your feature
   Given User is on login page
   
  @tag3
-  Scenario: Title of your scenario new outline
-		When user enters username
+  Scenario Outline: Title of your scenario new outline
+		When user enters username and password <logindata>
+		And user create list of your favorite foods in cart <testcaseData>
 		Then login should be successful
+		
+		Examples:
+		|logindata        |testcaseData                |
+		|LoginData.json   |testcaseData.json_TC001     |
+		
+		
+		
 		
 	@tag4
   Scenario: Title of your scenario new outline
-		When user enters username
+		#When user enters username
 		Then login should be successful

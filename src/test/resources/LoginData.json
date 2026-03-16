@@ -1,0 +1,12 @@
+{
+	"QA":
+	{
+	"username":"student",
+	"password":"Password123"
+	},
+	"UAT":
+	{
+	"username":"student4",
+	"password":"Password123"
+	}
+}

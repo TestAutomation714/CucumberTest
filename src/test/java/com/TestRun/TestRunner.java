@@ -12,7 +12,7 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 @Suite
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
-//@IncludeTags("tag4") // Runs scenarios tagged with @Smoke
+@IncludeTags("tag3") // Runs scenarios tagged with @Smoke, run single sceanario
 //@ExcludeTags("Ignore")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "com.StepDef, com.hooks")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, html:target/cucumber-reports/report.html")
