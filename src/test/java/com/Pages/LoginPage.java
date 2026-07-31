@@ -2,11 +2,15 @@ package com.Pages;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import org.json.simple.parser.ParseException;
 import com.CommonMethods.CommonReuseMethods;
+import com.Utility.CommonValues;
+
+import junit.framework.Assert;
 
 public class LoginPage extends CommonReuseMethods {
+	
+	CommonReuseMethods reuseObj=new CommonReuseMethods();
 	
 	public static String username="//input[@name='username']";
 	public static String password="//input[@name='password']";
@@ -19,26 +23,60 @@ public class LoginPage extends CommonReuseMethods {
 	public static String saveBtn="//label[text()='Row 2']//following::button[@id='save_btn']";
 	public static String row2savedTitle="//*[text()='Row 2 was saved']";
 	
+	public static String testTableLinke="//a[text()='Test Table']";
+	public static String sortbySelect="//select[@id='sortBy']";
+	public static String sortbyOptionOne="(//a[text()='View'])[1]";
+	public static String advSelenimTitle="(//div[text()='Advanced Selenium WebDriver with Java and TestNG'])[1]";
+	
+	public static String successMesg="//strong[contains(text(),'Congratulations ')]";
+	public static String usenameValue="(//*[contains(text(),'Use next credentials to execute Login')]//b)[1]";
+			
+	//CommonValues obj1=new CommonValues();
 	
 
-	public static void loginApplication(String usernametxt, String passwordtxt) throws FileNotFoundException, ParseException, InterruptedException
+	public void loginApplication(String usernametxt, String passwordtxt) throws FileNotFoundException, ParseException, InterruptedException
 	  {
-		CommonReuseMethods.WaitforElement(username);
-		CommonReuseMethods.sendTextinElemet(username,usernametxt);
-		CommonReuseMethods.sendTextinElemet(password,passwordtxt);
-		CommonReuseMethods.scrollIntoElement(submitBtn);
+		CommonValues.usernameVal=reuseObj.getTextinElemet(usenameValue);
+		reuseObj.WaitforElement(username);
+		reuseObj.sendTextinElemet(username,usernametxt);
+		reuseObj.sendTextinElemet(password,passwordtxt);
+		reuseObj.scrollIntoElement(submitBtn);
 		Thread.sleep(4000);
-		CommonReuseMethods.clickOnElement(submitBtn);
+		reuseObj.clickOnElement(submitBtn);
 	}
 	
-	public static void userAddedfavoritefoods(String fooditemname, String expectedName) throws InterruptedException, IOException
+	public void userAddedfavoritefoods(String fooditemname, String expectedName) throws InterruptedException, IOException
 	{
-		CommonReuseMethods.clickOnElement(practiceLink);
-		CommonReuseMethods.clickOnElement(testExceptLink);
-		CommonReuseMethods.clickOnElement(addBtn);
-		CommonReuseMethods.sendTextinElemet(row2editinput,fooditemname);
-		CommonReuseMethods.clickOnElement(saveBtn);
-		CommonReuseMethods.verifyTextMatches(row2savedTitle,expectedName);
+		reuseObj.clickOnElement(practiceLink);
+		reuseObj.clickOnElement(testExceptLink);
+		reuseObj.clickOnElement(addBtn);
+		reuseObj.sendTextinElemet(row2editinput,fooditemname);
+		reuseObj.sendTextinElemet(row2editinput,fooditemname);
+		reuseObj.clickOnElement(saveBtn);
+		reuseObj.verifyTextMatches(row2savedTitle,expectedName);
+		
+	}
+	
+	public void verifySelectTestTable(String sortbyOption) throws InterruptedException
+	{
+		Thread.sleep(14000);
+		reuseObj.clickOnElement(practiceLink);
+		reuseObj.clickOnElement(testTableLinke);
+		reuseObj.selectDropdownVal(sortbySelect, sortbyOption);
+	}
+	public void verifyAdvanceSeleniumTitlepage(String windowTitle) throws IOException
+	{
+		reuseObj.clickOnElement(sortbyOptionOne);
+		reuseObj.switchWindowonIndex("1");
+		//reuseObj.switchWindowonTitle(windowTitle);
+		reuseObj.verifyTextMatches(advSelenimTitle,"Advanced Selenium WebDriver with Java and TestNG");
+	}
+	
+	public void verfiyLoginSucccessOrNot(String SucccMsg) throws IOException
+	{
+		reuseObj.verifyTextContains(successMesg,CommonValues.usernameVal); //"Congratulations student. You successfully logged in!"
+		
+	
 		
 	}
 	

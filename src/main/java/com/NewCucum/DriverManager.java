@@ -1,13 +1,9 @@
 package com.NewCucum;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
-import java.util.Properties;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -18,7 +14,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DriverManager {
 
-	 private static final ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
+	 public static final ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
 	 
 	 
 	 public static void setDriver() throws IOException, InterruptedException {
@@ -73,11 +69,21 @@ public class DriverManager {
 	    public static WebDriver getDriver() {
 	        return tlDriver.get();
 	    }
+		
+		  /*public static  WebDriver getDriver() { 
+			  // If the thread-local is empty (after quit + remove), create a new one 
+               if (tlDriver.get() == null) {
+            	   tlDriver.set(driver); 
+            	   }
+               return tlDriver.get(); 
+               }*/
+		 
+	
 
 	    public static void quitDriver() {
 	        if (tlDriver.get() != null) {
 	            tlDriver.get().quit();
-	            tlDriver.remove(); // Crucial to prevent memory leaks
+	            //tlDriver.remove(); // Crucial to prevent memory leaks
 	        }
 	    }
 }

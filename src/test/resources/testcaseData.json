@@ -5,19 +5,19 @@
       "Row2AddedTitle": "Row 2 was saved"
     },
     "UAT": {
-      "Row2Val": "Chicken",
-      "Row3Val": "Mutton"
+       "Row2Val": "Chicken",
+      "Row2AddedTitle": "Row 2 was saved"
     }
   },
   
   "TC002": {
     "QA": {
-      "Row2Val": "Chicken",
-      "Row3Val": "Mutton"
+      "sortByVal": "col_course",
+      "Test Adv Window":"Advanced Selenium WebDriver with Java and TestNG"
     },
     "UAT": {
-      "Row2Val": "Chicken",
-      "Row3Val": "Mutton"
+      "sortByVal": "Course Name",
+      "Test Adv Window":"Advanced Selenium WebDriver with Java and TestNG"
     }
   }
 }

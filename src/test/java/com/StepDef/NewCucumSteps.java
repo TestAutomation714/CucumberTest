@@ -5,9 +5,7 @@ import java.io.IOException;
 import org.json.simple.parser.ParseException;
 import com.Pages.LoginPage;
 import com.Utility.JsonDataReader;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.Utility.ScenarioContext;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -15,35 +13,60 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class NewCucumSteps {
-	 //WebDriver driver = DriverManager.getDriver();
-	LoginPage lp=new LoginPage();
-	JsonDataReader fileObj=new JsonDataReader();
+	
+	    ScenarioContext context;
+	    public NewCucumSteps(ScenarioContext context) 
+	    { this.context = context; }
+	    
+		LoginPage lpObj=new LoginPage();
+		JsonDataReader fileObj=new JsonDataReader();
 	
 	    @Given("User is on login page")
 	    public void user_is_on_login_page() throws InterruptedException {
-	    	
+	    	 { context.scenarioData = "Hello!"; }
 	    	System.out.println("successfully login to application");
 	    }
 
 	    @When("^user enters username and password (.*)$")
 	    public void user_enters_username(String filename) throws FileNotFoundException, ParseException, InterruptedException{
 	        System.out.println("Entered username and pwd");
-	        LoginPage.loginApplication(fileObj.jsonLoginData(filename,"username"), fileObj.jsonLoginData(filename,"password"));
+	        { System.out.println(context.scenarioData); }
+	        context.usernameData = fileObj.jsonLoginData(filename,"username"); 
+	        lpObj.loginApplication(fileObj.jsonLoginData(filename,"username"), fileObj.jsonLoginData(filename,"password"));
 	        
 	    }
 
 	    @Then("login should be successful")
 	    public void login_should_be_successful() throws InterruptedException {
-	    	Thread.sleep(9000);
+	    	Thread.sleep(3000);
 	        System.out.println("Login success");
 	    }
 	    
 	    @And("^user create list of your favorite foods in cart (.*)$")
 	    public void user_enters_favoritefoods(String filename) throws ParseException, InterruptedException, IOException{
 	        System.out.println("Entered favorite foods");
-	        LoginPage.userAddedfavoritefoods(fileObj.jsonFileData(filename,"Row2Val"),fileObj.jsonFileData(filename,"Row2AddedTitle"));
+	        lpObj.userAddedfavoritefoods(fileObj.jsonFileData(filename,"Row2Val"),fileObj.jsonFileData(filename,"Row2AddedTitle"));
+	        
+	    }
+	    @And("^user check sortby option and list of courses (.*)$")
+	    public void user_enters_sortbyDropdown(String filename) throws ParseException, InterruptedException, IOException{
+	        System.out.println("Entered sortby dropdown");
+	        lpObj.verifySelectTestTable(fileObj.jsonFileData(filename,"sortByVal"));
+	        
+	    }
+	    @Then("^verify should ableto navigate advance selenium page (.*)$")
+	    public void verifyAdvanceSeleniumpage(String filename) throws ParseException, InterruptedException, IOException{
+	        System.out.println("Entered sortby dropdown");
+	        lpObj.verifyAdvanceSeleniumTitlepage(fileObj.jsonFileData(filename,"Test Adv Window"));
 	        
 	    }
 	    
+	    
+	    @And("verify user login sucess or not")
+	    public void verfiySuccessorNot() throws IOException
+	    {
+	    	String succesMessage=context.usernameData;
+	    	lpObj.verfiyLoginSucccessOrNot(succesMessage);
+	    }
 
 }
