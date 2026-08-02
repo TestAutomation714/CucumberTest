@@ -2,11 +2,9 @@ package com.Pages;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import org.json.simple.parser.ParseException;
 import com.CommonMethods.CommonReuseMethods;
 import com.Utility.CommonValues;
 
-import junit.framework.Assert;
 
 public class LoginPage extends CommonReuseMethods {
 	
@@ -34,7 +32,7 @@ public class LoginPage extends CommonReuseMethods {
 	//CommonValues obj1=new CommonValues();
 	
 
-	public void loginApplication(String usernametxt, String passwordtxt) throws FileNotFoundException, ParseException, InterruptedException
+	public void loginApplication(String usernametxt, String passwordtxt) throws FileNotFoundException, InterruptedException
 	  {
 		CommonValues.usernameVal=reuseObj.getTextinElemet(usenameValue);
 		reuseObj.WaitforElement(username);

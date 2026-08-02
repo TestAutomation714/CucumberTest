@@ -1,89 +1,122 @@
 package com.NewCucum;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import com.Utility.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DriverManager {
 
-	 public static final ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
-	 
-	 
-	 public static void setDriver() throws IOException, InterruptedException {
-		    WebDriver driver;
-			String browserType = PropertiesFile.readProperties("browsertype").toString();
-			String executionType = PropertiesFile.readProperties("executionType").toString();
-			String urlApplication = PropertiesFile.readProperties("urlApplication").toString();
-		    if (executionType.equalsIgnoreCase("remote")) {
-		        try {
-		        	
-		        	  String huburl ="http://192.168.29.130:4444/wd/hub";
-		            // URL of your Selenium Grid Hub
-		            URL hubUrl = new URL(huburl); 
-		          
-		            if (browserType.equalsIgnoreCase("chrome")) {
-		                ChromeOptions options = new ChromeOptions();
-		                options.addArguments("--remote-allow-origins=*");
-		                driver = new RemoteWebDriver(hubUrl, options);
-		            } else {
-		                FirefoxOptions options = new FirefoxOptions();
-		                driver = new RemoteWebDriver(hubUrl, options);
-		            }
-		        } catch (MalformedURLException e) {
-		            throw new RuntimeException("Grid Hub URL is invalid", e);
-		        }
-		    } else {
-		       ChromeOptions options = new ChromeOptions();
-		    			/*options.addArguments("--headless=new");
-		    			options.addArguments("--no-sandbox"); 
-		    			options.addArguments("--disable-dev-shm-usage");*/
-		    			//options.addArguments("--window-size=1920,1080");
-		        // Your existing local setup
-		        WebDriverManager.chromedriver().setup();
-		        driver = new ChromeDriver(options);
-		    }
-		    
-		    driver.manage().window().maximize();
-		    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-		    tlDriver.set(driver);
-		    Thread.sleep(3000);
-	    	DriverManager.getDriver().get(urlApplication);
-		}
+    // ThreadLocal ensures that each parallel thread gets its own completely isolated browser instance
+    public static final ThreadLocal<WebDriver> tlDriver = new ThreadLocal<>();
 
-	    /*public static void setDriver1(String browser) {
-	        if (browser.equalsIgnoreCase("chrome")) {
-	            WebDriverManager.chromedriver().setup();
-	            tlDriver.set(new ChromeDriver());
-	        }
-	        // Add other browsers as needed
-	    }*/
+    /**
+     * Initializes the driver based on execution type and browser configuration.
+     * Call this inside your @Before cucumber hook.
+     * 
+     * @param executionType "local" or "remote" (Grid)
+     * @param browserName "chrome", "firefox", or "edge"
+     * @param gridHubUrl The URL of your Selenium Grid Hub (e.g., "http://localhost:4444/wd/hub")
+     */
+    public static void setDriver(String executionType, String browserName, String gridHubUrl) {
+        WebDriver driver = null;
+        browserName = browserName.toLowerCase().trim();
+        executionType = executionType.toLowerCase().trim();
 
-	    public static WebDriver getDriver() {
-	        return tlDriver.get();
-	    }
-		
-		  /*public static  WebDriver getDriver() { 
-			  // If the thread-local is empty (after quit + remove), create a new one 
-               if (tlDriver.get() == null) {
-            	   tlDriver.set(driver); 
-            	   }
-               return tlDriver.get(); 
-               }*/
-		 
-	
+        if (executionType.equalsIgnoreCase("remote")) {
+            driver = createRemoteDriver(browserName, gridHubUrl);
+        } else {
+            driver = createLocalDriver(browserName);
+        }
 
-	    public static void quitDriver() {
-	        if (tlDriver.get() != null) {
-	            tlDriver.get().quit();
-	            //tlDriver.remove(); // Crucial to prevent memory leaks
-	        }
-	    }
+        // 1. Bind the created driver instance to the specific executing thread
+        tlDriver.set(driver);
+
+        // 2. Apply standard web browser configurations safely to this isolated instance
+        getDriver().manage().window().maximize();
+        getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+    }
+
+    /**
+     * Instantiates local web browsers using WebDriverManager automatically.
+     */
+    private static WebDriver createLocalDriver(String browserName) {
+        switch (browserName) {
+            case "chrome":
+                WebDriverManager.chromedriver().setup();
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--remote-allow-origins=*");
+                return new ChromeDriver(chromeOptions);
+
+            case "firefox":
+                WebDriverManager.firefoxdriver().setup();
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                return new FirefoxDriver(firefoxOptions);
+
+            case "edge":
+                WebDriverManager.edgedriver().setup();
+                EdgeOptions edgeOptions = new EdgeOptions();
+                return new EdgeDriver(edgeOptions);
+
+            default:
+                throw new IllegalArgumentException("Unsupported local browser type specified: " + browserName);
+        }
+    }
+
+    /**
+     * Instantiates grid-managed remote environments using Selenium 4 RemoteWebDriver.
+     */
+    private static WebDriver createRemoteDriver(String browserName, String gridHubUrl) {
+        try {
+            URL url = new URL(gridHubUrl);
+            
+            switch (browserName) {
+                case "chrome":
+                    ChromeOptions chromeOptions = new ChromeOptions();
+                    chromeOptions.addArguments("--remote-allow-origins=*");
+                    return new RemoteWebDriver(url, chromeOptions);
+
+                case "firefox":
+                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    return new RemoteWebDriver(url, firefoxOptions);
+
+                case "edge":
+                    EdgeOptions edgeOptions = new EdgeOptions();
+                    return new RemoteWebDriver(url, edgeOptions);
+
+                default:
+                    throw new IllegalArgumentException("Unsupported Grid browser type specified: " + browserName);
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("CRITICAL: The specified Selenium Grid Hub URL is malformed: " + gridHubUrl, e);
+        }
+    }
+
+    /**
+     * Retrieves the isolated WebDriver instance assigned exclusively to the calling thread.
+     * Call this inside your Step Definitions to perform browser actions.
+     */
+    public static WebDriver getDriver() {
+        return tlDriver.get();
+    }
+
+    /**
+     * Safely closes the browser window and destroys the thread allocation structure to avoid memory leaks.
+     * Call this inside your @After cucumber hook.
+     */
+    public static void quitDriver() {
+        if (tlDriver.get() != null) {
+            tlDriver.get().quit();
+            tlDriver.remove(); // Essential to scrub background thread data structures cleanly
+        }
+    }
 }

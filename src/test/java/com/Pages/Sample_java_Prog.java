@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import junit.framework.Assert;
+//import junit.framework.Assert;
 
 public class Sample_java_Prog {
 
@@ -15,7 +15,7 @@ public class Sample_java_Prog {
 		ArrayList<String> a1=new ArrayList<String>(list);
 		Collections.sort(a1);
 		
-		Assert.assertEquals(list, a1);
+		//Assert.assertEquals(list, a1);
 		for(String str1:a1)
 		{
 			System.out.print("\\n"+str1);

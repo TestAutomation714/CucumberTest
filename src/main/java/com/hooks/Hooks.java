@@ -1,37 +1,46 @@
 package com.hooks;
 
-import io.cucumber.java.Before;
-import io.cucumber.java.Scenario;
-
-import java.io.IOException;
-
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
-import io.cucumber.java.After;
-
-import com.CommonMethods.CommonReuseMethods;
 import com.NewCucum.DriverManager;
-
+import com.Utility.PropertiesFile;
+import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
+import io.cucumber.java.After;
 public class Hooks {
 
-	CommonReuseMethods obj=new CommonReuseMethods();
-	
-	 @Before
-	    public void setUp() throws IOException, InterruptedException {
-	        // Initialize the thread-local driver before each scenario
-	        DriverManager.setDriver();
-	    }
+    @Before
+    public void setUp() throws Exception {
+        // Read your framework config parameters dynamically
+        String executionType = PropertiesFile.readProperties("executionType"); // e.g., local or remote
+        String browser = PropertiesFile.readProperties("browsertype");       // e.g., chrome, firefox, edge
+        String gridUrl = PropertiesFile.readProperties("gridHubUrl");         // e.g., http://192.168.29.130:4444
+        String appUrl = PropertiesFile.readProperties("urlApplication");
 
-	    @After
-	    public void tearDown(Scenario scenario) {
-	    	 
-	        //validate if scenario has failed
-	        if(scenario.isFailed()) {
-	            final byte[] screenshot = ((TakesScreenshot) DriverManager.getDriver()).getScreenshotAs(OutputType.BYTES);
-	            scenario.attach(screenshot, "image/png", scenario.getName()); 
-	        }   
-	         
-	        DriverManager.quitDriver();
-	    }
+        // Initialize the browser driver on the respective isolated thread pipeline
+        DriverManager.setDriver(executionType, browser, gridUrl);
+        
+        // Open the target test webpage environment
+        DriverManager.getDriver().get(appUrl);
+    }
+
+    @After
+    //public void tearDown() {
+        public void tearDown(Scenario scenario) {
+            if (scenario.isFailed()) {
+                try {
+                    // Take the screenshot as a byte array
+                    byte[] screenshot = ((TakesScreenshot) DriverManager.getDriver()).getScreenshotAs(OutputType.BYTES);
+                    
+                    // Attach the screenshot to the Cucumber HTML report
+                    scenario.attach(screenshot, "image/png", scenario.getName() + "_Failure");
+                } catch (Exception e) {
+                    System.err.println("Failed to capture screenshot: " + e.getMessage());
+                }
+            }
+            
+            // Tear down the active driver instance securely
+            DriverManager.quitDriver();
+    }
 }

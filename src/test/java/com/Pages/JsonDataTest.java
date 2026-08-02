@@ -1,23 +1,14 @@
 package com.Pages;
 
-	import org.json.simple.JSONArray;
-	import org.json.simple.JSONObject;
-	import org.json.simple.parser.JSONParser;
-	import org.json.simple.parser.ParseException;
-	import org.openqa.selenium.By;
-	import org.openqa.selenium.WebDriver;
-	import org.openqa.selenium.WebElement;
-	import org.openqa.selenium.chrome.ChromeDriver;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.FileReader;
 	import java.io.IOException;
-	import java.util.concurrent.TimeUnit;
 
 	public class JsonDataTest {
-	   public static JsonObject main(String[] args) throws IOException, ParseException {
+	   public static JsonObject main(String[] args) throws IOException {
 
 	      //object of JSONParser
 	      //JSONParser j = new JSONParser();
