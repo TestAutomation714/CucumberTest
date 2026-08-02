@@ -24,7 +24,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Build and run Cucumber tests with Maven
-      run: mvn clean test
+      run: mvn clean test -Dtest=TestRunner
 
     #Optional: Upload test results as artifacts
     - name: Upload test reports
