@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - feature/**
+      - 'feature/**'
   pull_request:
     branches:
       - main
@@ -26,10 +26,9 @@ jobs:
     - name: Build and run Cucumber tests with Maven
       run: mvn clean test -Dtest=TestRunner -Dmaven.test.failure.ignore=true
 
-    #Optional: Upload test results as artifacts
   	- name: Upload Test Reports
       if: always()
-      uses: actions/actions-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: surefire-test-reports
         path: target/surefire-reports/
