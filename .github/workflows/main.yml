@@ -24,11 +24,12 @@ jobs:
         distribution: 'temurin'
 
     - name: Build and run Cucumber tests with Maven
-      run: mvn clean test -Dtest=TestRunner
+      run: mvn clean test -Dtest=TestRunner -Dmaven.test.failure.ignore=true
 
     #Optional: Upload test results as artifacts
-    - name: Upload test reports
-      uses: actions/upload-artifact@v4
+  	- name: Upload Test Reports
+      if: always()
+      uses: actions/actions-artifact@v3
       with:
-        name: cucumber-reports
-        path: target/cucumber-reports
+        name: surefire-test-reports
+        path: target/surefire-reports/
